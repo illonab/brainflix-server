@@ -21,6 +21,26 @@ router.get("/:id", (req, res) => {
   res.status(200).json(videoFound);
 });
 
+router.post("/:id/comments", (req, res) => {
+  const videoFound = videos.find((video) => video.id === req.params.id);
+  if (!videoFound) {
+    res
+      .status(404)
+      .json({ errorMessage: `video with id ${req.params.id} was not found` });
+  }
+  const newComment = {
+    name: req.body.name,
+    comment: req.body.comment,
+    likes: 0,
+    timestamp: new Date().getTime(),
+  };
+
+  videoFound.comments.push(newComment);
+
+  utils.writeToJsonFile(videosJSONFileName, videos);
+  res.status(200).json(newComment);
+});
+
 // create a video
 router.post("/", (req, res) => {
   if (
@@ -28,7 +48,7 @@ router.post("/", (req, res) => {
     !req.body.channel ||
     !req.body.image ||
     !req.body.description ||
-    req.body.video
+    !req.body.video
   ) {
     return res.status(400).json({
       errorMessage: "Please provide data for the new video",
@@ -44,7 +64,7 @@ router.post("/", (req, res) => {
     likes: 0,
     duration: 0,
     video: req.body.video,
-    timestamp: new Date(),
+    timestamp: new Date().getTime(),
     comments: [],
   };
 
