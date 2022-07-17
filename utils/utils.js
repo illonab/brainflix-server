@@ -3,12 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 
 // function that will write new data to json file
 const writeToJsonFile = (filename, content) => {
-  fs.writeFileSync(filename, JSON.stringify(content), "utf-8", (err) => {
-    if (err) {
-      console.log("Error: ", err);
-    }
-  });
-  console.log(`changes saved to the file ${filename}.....`);
+  fs.writeFileSync(filename, JSON.stringify(content), "utf-8");
 };
 
 const getNewId = () => {
